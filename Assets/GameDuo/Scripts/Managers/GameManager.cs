@@ -34,5 +34,10 @@ namespace GameDuo.Managers
                 DontDestroyOnLoad(instance.gameObject);
             }
         }
+
+        public static void DeleteGameData()
+        {
+
+        }
     }
 }
