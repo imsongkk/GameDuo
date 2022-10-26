@@ -1,21 +1,43 @@
+using GameDuo.Data;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 namespace GameDuo.Managers
 {
     public class DataManager
     {
-        // Start is called before the first frame update
-        void Start()
-        {
+        public readonly string UserDataJsonName = "\\UserData.json";
 
+        public UserData UserData { get; private set; } = null;
+
+        public UserData TryLoadUserData()
+        {
+            bool isExistsUserData = File.Exists(Application.persistentDataPath + UserDataJsonName);
+            if (!isExistsUserData) // 데이터 없으면 새로 생성
+                UserData = CreateUserData();
+            else
+                UserData = LoadUserData();
+
+            return UserData;
         }
 
-        // Update is called once per frame
-        void Update()
+        private UserData CreateUserData()
         {
-
+            var createdUserData = UserData.CreateDefaultUserData();
+            File.WriteAllText(Application.persistentDataPath + UserDataJsonName, JsonUtility.ToJson(createdUserData));
+            return createdUserData;
         }
+
+        private UserData LoadUserData()
+        {
+            var userDataStr = File.ReadAllText(Application.persistentDataPath + UserDataJsonName);
+            var userData = JsonUtility.FromJson<UserData>(userDataStr);
+            return userData;
+        }
+
+        public void SaveUserData() 
+            => File.WriteAllText(Application.persistentDataPath + UserDataJsonName, JsonUtility.ToJson(UserData));
     }
 }

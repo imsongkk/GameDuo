@@ -25,11 +25,5 @@ namespace GameDuo.UI.Popup
             AfterClosePopup?.Invoke();
             AfterClosePopup = null;
         }
-
-        public void ClosePopupUIByManager()
-        {
-            AfterClosePopup?.Invoke();
-            AfterClosePopup = null;
-        }
     }
 }

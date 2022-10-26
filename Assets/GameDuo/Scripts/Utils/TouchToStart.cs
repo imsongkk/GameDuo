@@ -1,3 +1,5 @@
+using GameDuo.Managers;
+using GameDuo.UI.Popup;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -17,7 +19,12 @@ public class TouchToStart : MonoBehaviour
     public void OnClick()
     {
         gameObject.SetActive(false);
-        SceneManager.LoadScene("MainScene");
+        var userData = GameManager.Data.TryLoadUserData();
+
+        if (userData.IsFirstUser())
+            GameManager.UI.ShowPopupUI<UI_RegisterNamePopup>();
+        else
+            SceneManager.LoadScene("MainScene");
     }
 
     void Update()
