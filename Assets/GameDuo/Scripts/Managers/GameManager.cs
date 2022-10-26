@@ -11,12 +11,13 @@ namespace GameDuo.Managers
         static GameManager instance;
         public static GameManager Instance { get { Init(); return instance; } }
 
-
         ResourceManager resourceManager = new ResourceManager();
         UIManager uiManager = new UIManager();
+        DataManager dataManager = new DataManager();
 
         public static ResourceManager Resource { get => Instance.resourceManager; }
         public static UIManager UI { get => Instance.uiManager; }
+        public static DataManager Data { get => Instance.dataManager; }
 
         public static void Init()
         {
@@ -30,15 +31,8 @@ namespace GameDuo.Managers
                 }
                 instance = go.GetComponent<GameManager>();
 
-                InitInputManager();
-
                 DontDestroyOnLoad(instance.gameObject);
             }
-        }
-
-        private static void InitInputManager()
-        {
-            //instance.gameObject.AddComponent<InputManager>();
         }
     }
 }
