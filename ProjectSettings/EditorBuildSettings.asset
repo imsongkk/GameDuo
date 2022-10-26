@@ -6,6 +6,12 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/LoginScene.unity
+    path: Assets/GameDuo/Scenes/LoginScene.unity
     guid: 2cda990e2423bbf4892e6590ba056729
+  - enabled: 1
+    path: Assets/GameDuo/Scenes/MainScene.unity
+    guid: 92587517343c6f349980bb1b193386b2
+  - enabled: 1
+    path: Assets/GameDuo/Scenes/InGameScene.unity
+    guid: ce9a276afab1a6249b54b89723d150e7
   m_configObjects: {}
