@@ -9,33 +9,28 @@ namespace GameDuo.Data
     public class UserData
     {
         string _name;
-        float _xp;
         int _money;
 
         AttackData _attack;
         DefenseData _defense;
         HeartData _heart;
+        XpData _xp;
 
         public string Name { get; set; }
-        public float Xp { get; set; }
         public int Money { get; set; }
         public AttackData Attack { get; private set; }
         public DefenseData Defense { get; private set; }
         public HeartData Heart { get; private set; }
+        public XpData Xp { get; private set; }
 
         public bool IsFirstUser() => string.IsNullOrEmpty(Name);
-
-        public void Save()
-        {
-
-        }
 
         public static UserData CreateDefaultUserData()
         {
             UserData userData = new UserData();
             userData.Name = null;
-            userData.Xp = 0;
             userData.Money = 100;
+            userData.Xp = XpData.CreateDefaultXpData();
             userData.Attack = AttackData.CreateDefaultAttackData();
             userData.Defense = DefenseData.CreateDefaultDefenseData();
             userData.Heart = HeartData.CreateDefaultHeartData();
@@ -50,8 +45,8 @@ namespace GameDuo.Data
             return new UserData()
             {
                 Name = entity.name,
-                Xp = entity.xp,
                 Money = entity.money,
+                _xp = entity.Xp,
                 Attack = entity.Attack,
                 Defense = entity.Defense,
                 Heart = entity.Heart,
@@ -64,11 +59,11 @@ namespace GameDuo.Data
     {
         public string name;
         public int money;
-        public float xp;
 
         public AttackData Attack;
         public DefenseData Defense;
         public HeartData Heart;
+        public XpData Xp;
 
         public UserDataEntity DeepCopy()
         {
@@ -76,7 +71,7 @@ namespace GameDuo.Data
             {
                 name = name,
                 money = money,
-                xp = xp,
+                Xp = new XpData() { level = Xp.level, value = Xp.value, maxValue = Xp.maxValue },
                 Attack = new AttackData() { level = Attack.level, value = Attack.value },
                 Defense = new DefenseData() { level = Defense.level, value = Defense.value },
                 Heart = new HeartData() { level = Heart.level, value = Heart.value },
@@ -88,8 +83,8 @@ namespace GameDuo.Data
             return new UserDataEntity()
             {
                 name = userData.Name,
-                xp = userData.Xp,
                 money = userData.Money,
+                Xp = new XpData() { level = userData.Xp.level, value = userData.Xp.value, maxValue = userData.Xp.maxValue },
                 Attack = new AttackData() { level = userData.Attack.level, value = userData.Attack.value },
                 Defense = new DefenseData() { level = userData.Defense.level, value = userData.Defense.value },
                 Heart = new HeartData() { level = userData.Heart.level, value = userData.Heart.value },
@@ -169,6 +164,32 @@ namespace GameDuo.Data
             HeartDataDict.TryGetValue(heartData.level, out int heartValue);
             heartData.value = heartValue;
             return heartData;
+        }
+    }
+
+    [Serializable]
+    public class XpData
+    {
+        public int value;
+        public int maxValue;
+        public int level;
+
+        public static Dictionary<int, int> XpDataDict = new Dictionary<int, int>() // key : level, value : maxValue
+        {
+            {1 , 10},
+            {2 , 20},
+            {3 , 30},
+            {4 , 40},
+            {5 , 50},
+        };
+
+        public static XpData CreateDefaultXpData()
+        {
+            XpData xpData = new XpData();
+            xpData.level = 1;
+            XpDataDict.TryGetValue(xpData.level, out int maxValue);
+            xpData.maxValue = maxValue;
+            return xpData;
         }
     }
 }
