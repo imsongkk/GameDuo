@@ -1,18 +1,17 @@
+using GameDuo.Managers;
+using GameDuo.UI.Scene;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InGameScene : MonoBehaviour
+namespace GameDuo.Scene
 {
-    // Start is called before the first frame update
-    void Start()
+    public class InGameScene : BaseScene
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        protected override void Init()
+        {
+            base.Init();
+            GameManager.UI.ShowSceneUI<UI_InGameScene>();
+        }
     }
 }
