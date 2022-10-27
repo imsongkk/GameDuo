@@ -42,7 +42,7 @@ namespace GameDuo.UI.Popup
         {
             var name = nameText.text;
 
-            GameManager.Data.UserData.name = name;
+            GameManager.Data.UserData.Name = name;
             GameManager.Data.SaveUserData();
 
             SceneManager.LoadScene("MainScene");

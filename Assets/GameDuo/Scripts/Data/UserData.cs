@@ -8,14 +8,22 @@ namespace GameDuo.Data
     [Serializable]
     public class UserData
     {
-        public string name;
-        public float xp;
-        public int money;
-        public AttackData Attack;
-        public DefenseData Defense;
-        public HeartData Heart;
+        string _name;
+        float _xp;
+        int _money;
 
-        public bool IsFirstUser() => string.IsNullOrEmpty(name);
+        AttackData _attack;
+        DefenseData _defense;
+        HeartData _heart;
+
+        public string Name { get; set; }
+        public float Xp { get; set; }
+        public int Money { get; set; }
+        public AttackData Attack { get; private set; }
+        public DefenseData Defense { get; private set; }
+        public HeartData Heart { get; private set; }
+
+        public bool IsFirstUser() => string.IsNullOrEmpty(Name);
 
         public void Save()
         {
@@ -25,14 +33,67 @@ namespace GameDuo.Data
         public static UserData CreateDefaultUserData()
         {
             UserData userData = new UserData();
-            userData.name = null;
-            userData.xp = 0;
-            userData.money = 100;
+            userData.Name = null;
+            userData.Xp = 0;
+            userData.Money = 100;
             userData.Attack = AttackData.CreateDefaultAttackData();
             userData.Defense = DefenseData.CreateDefaultDefenseData();
             userData.Heart = HeartData.CreateDefaultHeartData();
 
             return userData;
+        }
+
+        public static UserData From(UserDataEntity entity)
+        {
+            entity = entity.DeepCopy();
+
+            return new UserData()
+            {
+                Name = entity.name,
+                Xp = entity.xp,
+                Money = entity.money,
+                Attack = entity.Attack,
+                Defense = entity.Defense,
+                Heart = entity.Heart,
+            };
+        }
+    }
+
+    [Serializable]
+    public class UserDataEntity
+    {
+        public string name;
+        public int money;
+        public float xp;
+
+        public AttackData Attack;
+        public DefenseData Defense;
+        public HeartData Heart;
+
+        public UserDataEntity DeepCopy()
+        {
+            return new UserDataEntity()
+            {
+                name = name,
+                money = money,
+                xp = xp,
+                Attack = new AttackData() { level = Attack.level, value = Attack.value },
+                Defense = new DefenseData() { level = Defense.level, value = Defense.value },
+                Heart = new HeartData() { level = Heart.level, value = Heart.value },
+            };
+        }
+
+        public static UserDataEntity From(UserData userData)
+        {
+            return new UserDataEntity()
+            {
+                name = userData.Name,
+                xp = userData.Xp,
+                money = userData.Money,
+                Attack = new AttackData() { level = userData.Attack.level, value = userData.Attack.value },
+                Defense = new DefenseData() { level = userData.Defense.level, value = userData.Defense.value },
+                Heart = new HeartData() { level = userData.Heart.level, value = userData.Heart.value },
+            };
         }
     }
 

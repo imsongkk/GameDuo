@@ -33,11 +33,14 @@ namespace GameDuo.Managers
         private UserData LoadUserData()
         {
             var userDataStr = File.ReadAllText(Application.persistentDataPath + UserDataJsonName);
-            var userData = JsonUtility.FromJson<UserData>(userDataStr);
-            return userData;
+            var userDataEntity = JsonUtility.FromJson<UserDataEntity>(userDataStr);
+            return UserData.From(userDataEntity);
         }
 
-        public void SaveUserData() 
-            => File.WriteAllText(Application.persistentDataPath + UserDataJsonName, JsonUtility.ToJson(UserData));
+        public void SaveUserData()
+        {
+            var userDataEntity = UserDataEntity.From(UserData);
+            File.WriteAllText(Application.persistentDataPath + UserDataJsonName, JsonUtility.ToJson(userDataEntity));
+        }
     }
 }
