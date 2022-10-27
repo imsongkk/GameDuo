@@ -46,7 +46,7 @@ namespace GameDuo.Data
             {
                 Name = entity.name,
                 Money = entity.money,
-                _xp = entity.Xp,
+                Xp = entity.Xp,
                 Attack = entity.Attack,
                 Defense = entity.Defense,
                 Heart = entity.Heart,

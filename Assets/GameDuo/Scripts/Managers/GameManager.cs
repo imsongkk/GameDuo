@@ -15,10 +15,12 @@ namespace GameDuo.Managers
         ResourceManager resourceManager = new ResourceManager();
         UIManager uiManager = new UIManager();
         DataManager dataManager = new DataManager();
+        UserManager userManager = new UserManager();
 
         public static ResourceManager Resource { get => Instance.resourceManager; }
         public static UIManager UI { get => Instance.uiManager; }
         public static DataManager Data { get => Instance.dataManager; }
+        public static UserManager User { get => Instance.userManager; }
 
         public static void Init()
         {

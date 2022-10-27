@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using GameDuo.Utils;
 using UnityEngine.UI;
+using GameDuo.Managers;
 
 namespace GameDuo.UI.Scene
 {
@@ -24,11 +25,14 @@ namespace GameDuo.UI.Scene
             ShopWindow,
 
             NameText,
-            XpText,
+            LevelText,
             MoneyText,
+
+            XpBar,
         }
 
-        TextMeshProUGUI nameText, moneyText, xpText;
+        TextMeshProUGUI nameText, moneyText, levelText;
+        Image xpBar;
         GameObject selectButton, enforceButton, produceButton, shopButton;
         GameObject selectWindow, enforceWindow, produceWindow, shopWindow;
 
@@ -41,6 +45,9 @@ namespace GameDuo.UI.Scene
             base.Init();
             BindObjects();
 
+            GameManager.User.UI_InGameScene = this;
+
+            InitData();
             UpdateCurrentSelectedButton(selectButton, selectWindow);
         }
 
@@ -50,7 +57,9 @@ namespace GameDuo.UI.Scene
 
             nameText = GetObject((int)GameObjects.NameText).GetComponent<TextMeshProUGUI>();
             moneyText = GetObject((int)GameObjects.MoneyText).GetComponent<TextMeshProUGUI>();
-            xpText = GetObject((int)GameObjects.XpText).GetComponent<TextMeshProUGUI>();
+            levelText = GetObject((int)GameObjects.LevelText).GetComponent<TextMeshProUGUI>();
+
+            xpBar = GetObject((int)GameObjects.XpBar).GetComponent<Image>();
 
             selectButton = GetObject((int)GameObjects.SelectButton);
             AddUIEvent(selectButton, OnClickSelectButton, Define.UIEvent.Click);
@@ -92,6 +101,17 @@ namespace GameDuo.UI.Scene
         private void OnClickSelectButton(PointerEventData obj)
         {
             UpdateCurrentSelectedButton(selectButton, selectWindow);
+        }
+
+        private void InitData()
+        {
+            var userData = GameManager.Data.UserData;
+            nameText.text = userData.Name;
+            moneyText.text = userData.Money.ToString();
+            levelText.text = $"Level : {userData.Xp.level}";
+            int curXp = userData.Xp.value;
+            int maxXp = userData.Xp.maxValue;
+            xpBar.fillAmount = curXp / (float)maxXp;
         }
 
         private void UpdateCurrentSelectedButton(GameObject targetButton, GameObject targetWindow)
