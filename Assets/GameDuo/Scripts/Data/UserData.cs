@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static GameDuo.Components.EnforceField;
 
 namespace GameDuo.Data
 {
@@ -72,9 +73,9 @@ namespace GameDuo.Data
                 name = name,
                 money = money,
                 Xp = new XpData() { level = Xp.level, value = Xp.value, maxValue = Xp.maxValue },
-                Attack = new AttackData() { level = Attack.level, value = Attack.value },
-                Defense = new DefenseData() { level = Defense.level, value = Defense.value },
-                Heart = new HeartData() { level = Heart.level, value = Heart.value },
+                Attack = new AttackData() { level = Attack.level, value = Attack.value, upgradeCost = Attack.upgradeCost },
+                Defense = new DefenseData() { level = Defense.level, value = Defense.value, upgradeCost = Defense.upgradeCost },
+                Heart = new HeartData() { level = Heart.level, value = Heart.value, upgradeCost = Heart.upgradeCost },
             };
         }
 
@@ -85,84 +86,97 @@ namespace GameDuo.Data
                 name = userData.Name,
                 money = userData.Money,
                 Xp = new XpData() { level = userData.Xp.level, value = userData.Xp.value, maxValue = userData.Xp.maxValue },
-                Attack = new AttackData() { level = userData.Attack.level, value = userData.Attack.value },
-                Defense = new DefenseData() { level = userData.Defense.level, value = userData.Defense.value },
-                Heart = new HeartData() { level = userData.Heart.level, value = userData.Heart.value },
+                Attack = new AttackData() { level = userData.Attack.level, value = userData.Attack.value, upgradeCost = userData.Attack.upgradeCost },
+                Defense = new DefenseData() { level = userData.Defense.level, value = userData.Defense.value, upgradeCost = userData.Defense.upgradeCost },
+                Heart = new HeartData() { level = userData.Heart.level, value = userData.Heart.value , upgradeCost = userData.Heart.upgradeCost },
             };
         }
     }
 
-    [Serializable]
-    public class AttackData
+    public abstract class UpgradeData
     {
         public int value;
         public int level;
+        public int upgradeCost;
 
-        public static Dictionary<int, int> AttackDataDict = new Dictionary<int, int>() // key : level, value : value
+        public static List<Dictionary<int, (int, int)>> UpgradeDataList = new List<Dictionary<int, (int, int)>>()
         {
-            {1 , 10},
-            {2 , 15},
-            {3 , 20},
-            {4 , 25},
-            {5 , 30},
+            // key : level , value : (value, upgradeCost)
+            new Dictionary<int, (int, int)>() // attack
+            {
+                {1 , (10, 10)},
+                {2 , (15, 15)},
+                {3 , (25, 20)},
+                {4 , (40, 25)},
+                {5 , (55, 30)},
+            },
+            new Dictionary<int, (int, int)>() // defense
+            {
+                {1 , (1, 10)},
+                {2 , (3, 15)},
+                {3 , (6, 20)},
+                {4 , (10, 25)},
+                {5 , (15, 30)},
+            },
+            new Dictionary<int, (int, int)>() // heart
+            {
+                {1 , (100, 10)},
+                {2 , (120, 10)},
+                {3 , (160, 10)},
+                {4 , (220, 10)},
+                {5 , (300, 10)},
+            },
         };
 
+        public void Upgrade(EnforceType type)
+        {
+            var upgradeDict = UpgradeDataList[(int)type];
+            upgradeDict.TryGetValue(level + 1, out var upgradeResult);
+
+            value = upgradeResult.Item1;
+            upgradeCost = upgradeResult.Item2;
+            level = level + 1;
+        }
+    }
+
+    [Serializable]
+    public class AttackData : UpgradeData
+    {
         public static AttackData CreateDefaultAttackData()
         {
             AttackData attackData = new AttackData();
             attackData.level = 1;
-            AttackDataDict.TryGetValue(attackData.level, out int attackValue);
-            attackData.value = attackValue;
+            UpgradeDataList[(int)EnforceType.Attack].TryGetValue(attackData.level, out var result);
+            attackData.value = result.Item1;
+            attackData.upgradeCost = result.Item2;
             return attackData;
         }
     }
 
     [Serializable]
-    public class DefenseData
+    public class DefenseData : UpgradeData
     {
-        public int value;
-        public int level;
-
-        public static Dictionary<int, int> DefenseDataDict = new Dictionary<int, int>() // key : level, value : value
-        {
-            {1 , 1},
-            {2 , 3},
-            {3 , 5},
-            {4 , 7},
-            {5 , 9},
-        };
-
         public static DefenseData CreateDefaultDefenseData()
         {
             DefenseData defenseData = new DefenseData();
             defenseData.level = 1;
-            DefenseDataDict.TryGetValue(defenseData.level, out int defenseValue);
-            defenseData.value = defenseValue;
+            UpgradeDataList[(int)EnforceType.Defense].TryGetValue(defenseData.level, out var result);
+            defenseData.value = result.Item1;
+            defenseData.upgradeCost = result.Item2;
             return defenseData;
         }
     }
 
     [Serializable]
-    public class HeartData
+    public class HeartData : UpgradeData
     {
-        public int value;
-        public int level;
-
-        public static Dictionary<int, int> HeartDataDict = new Dictionary<int, int>() // key : level, value : value
-        {
-            {1 , 100},
-            {2 , 120},
-            {3 , 140},
-            {4 , 160},
-            {5 , 180},
-        };
-
         public static HeartData CreateDefaultHeartData()
         {
             HeartData heartData = new HeartData();
             heartData.level = 1;
-            HeartDataDict.TryGetValue(heartData.level, out int heartValue);
-            heartData.value = heartValue;
+            UpgradeDataList[(int)EnforceType.Heart].TryGetValue(heartData.level, out var result);
+            heartData.value = result.Item1;
+            heartData.upgradeCost = result.Item2;
             return heartData;
         }
     }

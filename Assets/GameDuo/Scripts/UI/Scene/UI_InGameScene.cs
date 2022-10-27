@@ -7,6 +7,7 @@ using UnityEngine.EventSystems;
 using GameDuo.Utils;
 using UnityEngine.UI;
 using GameDuo.Managers;
+using GameDuo.Components;
 
 namespace GameDuo.UI.Scene
 {
@@ -29,6 +30,10 @@ namespace GameDuo.UI.Scene
             MoneyText,
 
             XpBar,
+
+            AttackEnforceField,
+            DefenseEnforceField,
+            HeartEnforceField,
         }
 
         TextMeshProUGUI nameText, moneyText, levelText;
@@ -39,6 +44,7 @@ namespace GameDuo.UI.Scene
         GameObject currentSelectedButton;
         GameObject currentWindow;
 
+        EnforceField attackEnforce, defenseEnforce, heartEnforce;
 
         public override void Init()
         {
@@ -81,6 +87,10 @@ namespace GameDuo.UI.Scene
             enforceWindow = GetObject((int)GameObjects.EnforceWindow);
             produceWindow = GetObject((int)GameObjects.ProduceWindow);
             shopWindow = GetObject((int)GameObjects.ShopWindow);
+
+            attackEnforce = GetObject((int)GameObjects.AttackEnforceField).GetComponent<EnforceField>();
+            defenseEnforce = GetObject((int)GameObjects.DefenseEnforceField).GetComponent<EnforceField>();
+            heartEnforce = GetObject((int)GameObjects.HeartEnforceField).GetComponent<EnforceField>();
         }
 
         private void OnClickShopButton(PointerEventData obj)
@@ -112,6 +122,15 @@ namespace GameDuo.UI.Scene
             int curXp = userData.Xp.value;
             int maxXp = userData.Xp.maxValue;
             xpBar.fillAmount = curXp / (float)maxXp;
+
+            InitEnforceField();
+
+            void InitEnforceField()
+            {
+                attackEnforce.InitEnforceField(EnforceField.EnforceType.Attack);
+                defenseEnforce.InitEnforceField(EnforceField.EnforceType.Defense);
+                heartEnforce.InitEnforceField(EnforceField.EnforceType.Heart);
+            }
         }
 
         private void UpdateCurrentSelectedButton(GameObject targetButton, GameObject targetWindow)
@@ -146,6 +165,11 @@ namespace GameDuo.UI.Scene
                 image.color = new Color(image.color.r, image.color.g, image.color.b, 120 / 255f);
             else
                 image.color = new Color(image.color.r, image.color.g, image.color.b, 255 / 255f);
+        }
+
+        public void RefreshMoneyText()
+        {
+            moneyText.text = GameManager.Data.UserData.Money.ToString();
         }
     }
 }
