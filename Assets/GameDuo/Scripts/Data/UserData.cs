@@ -9,20 +9,14 @@ namespace GameDuo.Data
     [Serializable]
     public class UserData
     {
-        string _name;
-        int _money;
-
-        AttackData _attack;
-        DefenseData _defense;
-        HeartData _heart;
-        XpData _xp;
-
         public string Name { get; set; }
         public int Money { get; set; }
         public AttackData Attack { get; private set; }
         public DefenseData Defense { get; private set; }
         public HeartData Heart { get; private set; }
         public XpData Xp { get; private set; }
+        public List<ItemData> Items { get; private set; }
+        public ItemData Item { get; private set; }
 
         public bool IsFirstUser() => string.IsNullOrEmpty(Name);
 
@@ -35,6 +29,8 @@ namespace GameDuo.Data
             userData.Attack = AttackData.CreateDefaultAttackData();
             userData.Defense = DefenseData.CreateDefaultDefenseData();
             userData.Heart = HeartData.CreateDefaultHeartData();
+            userData.Item = ItemData.CreateDefaultItemData();
+            userData.Items = ItemData.CreateDafulateItemsData();
 
             return userData;
         }
@@ -51,6 +47,8 @@ namespace GameDuo.Data
                 Attack = entity.Attack,
                 Defense = entity.Defense,
                 Heart = entity.Heart,
+                Item = entity.Item,
+                Items = entity.Items,
             };
         }
     }
@@ -65,6 +63,8 @@ namespace GameDuo.Data
         public DefenseData Defense;
         public HeartData Heart;
         public XpData Xp;
+        public ItemData Item;
+        public List<ItemData> Items;
 
         public UserDataEntity DeepCopy()
         {
@@ -76,6 +76,8 @@ namespace GameDuo.Data
                 Attack = new AttackData() { level = Attack.level, value = Attack.value, upgradeCost = Attack.upgradeCost },
                 Defense = new DefenseData() { level = Defense.level, value = Defense.value, upgradeCost = Defense.upgradeCost },
                 Heart = new HeartData() { level = Heart.level, value = Heart.value, upgradeCost = Heart.upgradeCost },
+                Item = Item,
+                Items = Items,
             };
         }
 
@@ -88,7 +90,9 @@ namespace GameDuo.Data
                 Xp = new XpData() { level = userData.Xp.level, value = userData.Xp.value, maxValue = userData.Xp.maxValue },
                 Attack = new AttackData() { level = userData.Attack.level, value = userData.Attack.value, upgradeCost = userData.Attack.upgradeCost },
                 Defense = new DefenseData() { level = userData.Defense.level, value = userData.Defense.value, upgradeCost = userData.Defense.upgradeCost },
-                Heart = new HeartData() { level = userData.Heart.level, value = userData.Heart.value , upgradeCost = userData.Heart.upgradeCost },
+                Heart = new HeartData() { level = userData.Heart.level, value = userData.Heart.value, upgradeCost = userData.Heart.upgradeCost },
+                Item = userData.Item,
+                Items = userData.Items,
             };
         }
     }
@@ -204,6 +208,67 @@ namespace GameDuo.Data
             XpDataDict.TryGetValue(xpData.level, out int maxValue);
             xpData.maxValue = maxValue;
             return xpData;
+        }
+    }
+
+    [Serializable]
+    public class ItemData
+    {
+        public int level = 0;
+        public int damage = 0;
+
+        public static readonly int maxItemCount = 15;
+
+        public static Dictionary<int, int> ItemDataDict = new Dictionary<int, int>() // key : level, value : damage
+        {
+            {1 , 10},
+            {2 , 20},
+            {3 , 30},
+            {4 , 40},
+            {5 , 50},
+        };
+
+        public bool IsExistsItem() => level != 0;
+
+        public static ItemData CreateDefaultItemData()
+            => new ItemData();
+
+        public static ItemData CreateFirstItem()
+        {
+            ItemDataDict.TryGetValue(1, out var value);
+            return new ItemData()
+            {
+                level = 1,
+                damage = value,
+            };
+        }
+
+        public static void TryMerge(ItemData left, ItemData right, out ItemData mergedItem) // left - > right
+        {
+            if(left.level == right.level && left.level != 0)
+            {
+                if (left.level != 5)
+                {
+                    ItemDataDict.TryGetValue(left.level + 1, out var value);
+                    mergedItem = new ItemData()
+                    {
+                        level = left.level + 1,
+                        damage = value
+                    };
+                }
+                else
+                    mergedItem = null;
+            }
+            else
+                mergedItem = null;
+        }
+
+        public static List<ItemData> CreateDafulateItemsData()
+        {
+            var items = new List<ItemData>();
+            for(int i=0; i<maxItemCount;i++)
+                items.Add(CreateFirstItem());
+            return items;
         }
     }
 }

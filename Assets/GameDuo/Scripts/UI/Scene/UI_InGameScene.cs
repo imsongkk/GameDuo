@@ -34,6 +34,9 @@ namespace GameDuo.UI.Scene
             AttackEnforceField,
             DefenseEnforceField,
             HeartEnforceField,
+
+            ItemContainer,
+            DraggingUI,
         }
 
         TextMeshProUGUI nameText, moneyText, levelText;
@@ -46,12 +49,17 @@ namespace GameDuo.UI.Scene
 
         EnforceField attackEnforce, defenseEnforce, heartEnforce;
 
+        Transform itemContainer;
+
+        public RectTransform DraggingUI { get; private set; }
+
         public override void Init()
         {
             base.Init();
             BindObjects();
 
             GameManager.User.UI_InGameScene = this;
+            GameManager.Item.UI_InGameScene = this;
 
             InitData();
             UpdateCurrentSelectedButton(selectButton, selectWindow);
@@ -91,6 +99,15 @@ namespace GameDuo.UI.Scene
             attackEnforce = GetObject((int)GameObjects.AttackEnforceField).GetComponent<EnforceField>();
             defenseEnforce = GetObject((int)GameObjects.DefenseEnforceField).GetComponent<EnforceField>();
             heartEnforce = GetObject((int)GameObjects.HeartEnforceField).GetComponent<EnforceField>();
+
+            itemContainer = GetObject((int)GameObjects.ItemContainer).transform;
+            DraggingUI = GetObject((int)GameObjects.DraggingUI).GetComponent<RectTransform>();
+
+            for (int i=0; i<itemContainer.childCount; i++)
+            {
+                var itemComponent = itemContainer.GetChild(i).GetComponent<ItemComponent>();
+                itemComponent.InitItemComponent(i, GameManager.Data.UserData.Items[i]);
+            }
         }
 
         private void OnClickShopButton(PointerEventData obj)
