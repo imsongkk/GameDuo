@@ -77,6 +77,9 @@ namespace GameDuo.Components
         private bool IsDragable()
             => Item.level != 0;
 
+        public bool CanCreateItem()
+            => Item.level == 0;
+
         public void CreateItem()
         {
             Item = ItemData.CreateFirstItem();
@@ -87,6 +90,7 @@ namespace GameDuo.Components
         {
             HideItem();
             Item = ItemData.CreateDefaultItemData();
+            Debug.Log(Item.level);
         }
 
         private void TryShowItem()

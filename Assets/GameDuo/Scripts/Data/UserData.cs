@@ -11,6 +11,7 @@ namespace GameDuo.Data
     {
         public string Name { get; set; }
         public int Money { get; set; }
+        public int CanCreateItemCount { get; set; }
         public AttackData Attack { get; private set; }
         public DefenseData Defense { get; private set; }
         public HeartData Heart { get; private set; }
@@ -25,6 +26,7 @@ namespace GameDuo.Data
             UserData userData = new UserData();
             userData.Name = null;
             userData.Money = 100;
+            userData.CanCreateItemCount = 10;
             userData.Xp = XpData.CreateDefaultXpData();
             userData.Attack = AttackData.CreateDefaultAttackData();
             userData.Defense = DefenseData.CreateDefaultDefenseData();
@@ -43,6 +45,7 @@ namespace GameDuo.Data
             {
                 Name = entity.name,
                 Money = entity.money,
+                CanCreateItemCount = entity.canCreateItemCount,
                 Xp = entity.Xp,
                 Attack = entity.Attack,
                 Defense = entity.Defense,
@@ -58,6 +61,7 @@ namespace GameDuo.Data
     {
         public string name;
         public int money;
+        public int canCreateItemCount;
 
         public AttackData Attack;
         public DefenseData Defense;
@@ -72,6 +76,7 @@ namespace GameDuo.Data
             {
                 name = name,
                 money = money,
+                canCreateItemCount = canCreateItemCount,
                 Xp = new XpData() { level = Xp.level, value = Xp.value, maxValue = Xp.maxValue },
                 Attack = new AttackData() { level = Attack.level, value = Attack.value, upgradeCost = Attack.upgradeCost },
                 Defense = new DefenseData() { level = Defense.level, value = Defense.value, upgradeCost = Defense.upgradeCost },
@@ -87,6 +92,7 @@ namespace GameDuo.Data
             {
                 name = userData.Name,
                 money = userData.Money,
+                canCreateItemCount = userData.CanCreateItemCount,
                 Xp = new XpData() { level = userData.Xp.level, value = userData.Xp.value, maxValue = userData.Xp.maxValue },
                 Attack = new AttackData() { level = userData.Attack.level, value = userData.Attack.value, upgradeCost = userData.Attack.upgradeCost },
                 Defense = new DefenseData() { level = userData.Defense.level, value = userData.Defense.value, upgradeCost = userData.Defense.upgradeCost },

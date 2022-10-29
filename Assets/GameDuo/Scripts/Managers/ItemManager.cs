@@ -13,9 +13,22 @@ namespace GameDuo.Managers
         public ItemComponent CurrentCursorItem { get; private set; } = null;
         public ItemComponent CurrentDraggingItem { get; private set; } = null;
 
-        public UI_InGameScene UI_InGameScene { get; set; }
+        public UI_InGameScene UI_InGameScene { get; private set; }
 
         GameObject draggingUI;
+        Transform itemContainer;
+
+        public readonly int maxCount = 10;
+        int canCreateItemCount = 10;
+
+        public void InitItemManager(UI_InGameScene target, Transform itemContainer)
+        {
+            UI_InGameScene = target;
+            this.itemContainer = itemContainer;
+
+            canCreateItemCount = GameManager.Data.UserData.CanCreateItemCount;
+
+        }
 
         public void OnBeginDrag(ItemComponent draggingItem)
         {
@@ -44,6 +57,24 @@ namespace GameDuo.Managers
         public void OnPointerExit()
         {
             CurrentCursorItem = null;
+        }
+
+        public bool TryProduceItem(TextMeshProUGUI uiText)
+        {
+            for(int i=0; i<itemContainer.childCount; i++)
+            {
+                var itemComponent = itemContainer.GetChild(i).GetComponent<ItemComponent>();
+
+                if(itemComponent.CanCreateItem())
+                {
+                    Debug.Log(i);
+                    Debug.Log(itemComponent.name);
+                    itemComponent.CreateItem();
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

@@ -13,12 +13,16 @@ namespace GameDuo.UI.Scene
 {
     public class UI_InGameScene : UI_Scene
     {
+
+        public readonly int maxCreateItemCount = 10;
+
         enum GameObjects
         {
             SelectButton,
             EnforceButton,
             ProduceButton,
             ShopButton,
+            CreateButton,
 
             SelectWindow,
             EnforceWindow,
@@ -28,6 +32,7 @@ namespace GameDuo.UI.Scene
             NameText,
             LevelText,
             MoneyText,
+            CreateText,
 
             XpBar,
 
@@ -39,7 +44,7 @@ namespace GameDuo.UI.Scene
             DraggingUI,
         }
 
-        TextMeshProUGUI nameText, moneyText, levelText;
+        TextMeshProUGUI nameText, moneyText, levelText, createText;
         Image xpBar;
         GameObject selectButton, enforceButton, produceButton, shopButton;
         GameObject selectWindow, enforceWindow, produceWindow, shopWindow;
@@ -59,10 +64,18 @@ namespace GameDuo.UI.Scene
             BindObjects();
 
             GameManager.User.UI_InGameScene = this;
-            GameManager.Item.UI_InGameScene = this;
+
+            GameManager.Item.InitItemManager(this, itemContainer);
 
             InitData();
             UpdateCurrentSelectedButton(selectButton, selectWindow);
+
+            //StartCoroutine(CreateItemCoroutine());
+        }
+
+        IEnumerator CreateItemCoroutine()
+        {
+            return null;
         }
 
         private void BindObjects()
@@ -72,6 +85,7 @@ namespace GameDuo.UI.Scene
             nameText = GetObject((int)GameObjects.NameText).GetComponent<TextMeshProUGUI>();
             moneyText = GetObject((int)GameObjects.MoneyText).GetComponent<TextMeshProUGUI>();
             levelText = GetObject((int)GameObjects.LevelText).GetComponent<TextMeshProUGUI>();
+            createText = GetObject((int)GameObjects.CreateText).GetComponent<TextMeshProUGUI>();
 
             xpBar = GetObject((int)GameObjects.XpBar).GetComponent<Image>();
 
@@ -91,6 +105,10 @@ namespace GameDuo.UI.Scene
             AddUIEvent(shopButton, OnClickShopButton, Define.UIEvent.Click);
             AddButtonAnim(shopButton);
 
+            GameObject createButton = GetObject((int)GameObjects.CreateButton);
+            AddUIEvent(createButton, OnClickCreateButton, Define.UIEvent.Click);
+            AddButtonAnim(createButton);
+
             selectWindow = GetObject((int)GameObjects.SelectWindow);
             enforceWindow = GetObject((int)GameObjects.EnforceWindow);
             produceWindow = GetObject((int)GameObjects.ProduceWindow);
@@ -108,6 +126,11 @@ namespace GameDuo.UI.Scene
                 var itemComponent = itemContainer.GetChild(i).GetComponent<ItemComponent>();
                 itemComponent.InitItemComponent(i, GameManager.Data.UserData.Items[i]);
             }
+        }
+
+        private void OnClickCreateButton(PointerEventData obj)
+        {
+            GameManager.Item.TryProduceItem(createText);
         }
 
         private void OnClickShopButton(PointerEventData obj)
@@ -135,6 +158,7 @@ namespace GameDuo.UI.Scene
             var userData = GameManager.Data.UserData;
             nameText.text = userData.Name;
             moneyText.text = userData.Money.ToString();
+            createText.text = userData.CanCreateItemCount.ToString();
             levelText.text = $"Level : {userData.Xp.level}";
             int curXp = userData.Xp.value;
             int maxXp = userData.Xp.maxValue;
