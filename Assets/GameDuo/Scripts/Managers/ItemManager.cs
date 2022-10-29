@@ -2,6 +2,7 @@ using GameDuo.Components;
 using GameDuo.UI.Scene;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -14,10 +15,14 @@ namespace GameDuo.Managers
 
         public UI_InGameScene UI_InGameScene { get; set; }
 
+        GameObject draggingUI;
+
         public void OnBeginDrag(ItemComponent draggingItem)
         {
             CurrentDraggingItem = draggingItem;
-            UI_InGameScene.DraggingUI.gameObject.SetActive(true);
+            draggingUI = UI_InGameScene.DraggingUI.gameObject;
+            draggingUI.SetActive(true);
+            draggingUI.GetComponentInChildren<TextMeshProUGUI>().text = draggingItem.Item.level.ToString();
         }
 
         public void OnEndDrag()
