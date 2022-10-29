@@ -34,6 +34,7 @@ namespace GameDuo.UI.Scene
             MoneyText,
             CreateText,
 
+            ProducingBar,
             XpBar,
 
             AttackEnforceField,
@@ -45,7 +46,7 @@ namespace GameDuo.UI.Scene
         }
 
         TextMeshProUGUI nameText, moneyText, levelText, createText;
-        Image xpBar;
+        Image xpBar, producingBar;
         GameObject selectButton, enforceButton, produceButton, shopButton;
         GameObject selectWindow, enforceWindow, produceWindow, shopWindow;
 
@@ -69,13 +70,6 @@ namespace GameDuo.UI.Scene
 
             InitData();
             UpdateCurrentSelectedButton(selectButton, selectWindow);
-
-            //StartCoroutine(CreateItemCoroutine());
-        }
-
-        IEnumerator CreateItemCoroutine()
-        {
-            return null;
         }
 
         private void BindObjects()
@@ -88,6 +82,7 @@ namespace GameDuo.UI.Scene
             createText = GetObject((int)GameObjects.CreateText).GetComponent<TextMeshProUGUI>();
 
             xpBar = GetObject((int)GameObjects.XpBar).GetComponent<Image>();
+            producingBar = GetObject((int)GameObjects.ProducingBar).GetComponent<Image>();
 
             selectButton = GetObject((int)GameObjects.SelectButton);
             AddUIEvent(selectButton, OnClickSelectButton, Define.UIEvent.Click);
@@ -130,7 +125,10 @@ namespace GameDuo.UI.Scene
 
         private void OnClickCreateButton(PointerEventData obj)
         {
-            GameManager.Item.TryProduceItem(createText);
+            var result = GameManager.Item.TryProduceItem(producingBar, () =>
+            {
+                createText.text = $"{GameManager.Data.UserData.CanCreateItemCount} / {maxCreateItemCount}";
+            });
         }
 
         private void OnClickShopButton(PointerEventData obj)
