@@ -17,7 +17,7 @@ namespace GameDuo.Data
         public HeartData Heart { get; private set; }
         public XpData Xp { get; private set; }
         public List<ItemData> Items { get; private set; }
-        public ItemData Item { get; private set; }
+        public ItemData Item { get; set; }
 
         public bool IsFirstUser() => string.IsNullOrEmpty(Name);
 
@@ -222,6 +222,9 @@ namespace GameDuo.Data
     {
         public int level = 0;
         public int damage = 0;
+
+        public ItemData DeepCopy()
+            => new ItemData() { damage = damage, level = level };
 
         public static readonly int maxItemCount = 15;
 

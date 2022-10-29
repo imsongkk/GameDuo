@@ -15,6 +15,8 @@ namespace GameDuo.Managers
         public ItemComponent CurrentCursorItem { get; private set; } = null;
         public ItemComponent CurrentDraggingItem { get; private set; } = null;
 
+        public InventoryComponent Inventory { get; set; } = null;
+
         public UI_InGameScene UI_InGameScene { get; private set; }
 
         GameObject draggingUI;

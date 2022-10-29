@@ -39,7 +39,9 @@ namespace GameDuo.Components
             if (GameManager.Item.CurrentCursorItem == null || GameManager.Item.CurrentCursorItem == this) // 이상한 곳에 드래그
                 TryShowItem();
             else
-                GameManager.Item.CurrentCursorItem.OnDrop(eventData, this);
+                GameManager.Item.CurrentCursorItem.OnDrop(this);
+
+            GameManager.Item.Inventory?.OnDrop(this);
         }
 
         public void OnDrag(PointerEventData eventData)
@@ -58,7 +60,7 @@ namespace GameDuo.Components
             GameManager.Item.OnPointerEnter(this);
         }
 
-        public void OnDrop(PointerEventData evt, ItemComponent droppedComponent)
+        public void OnDrop(ItemComponent droppedComponent)
         {
             if (this == droppedComponent) return; // 자기 자신 무시
 
@@ -94,7 +96,7 @@ namespace GameDuo.Components
             Debug.Log(Item.level);
         }
 
-        private void TryShowItem()
+        public void TryShowItem()
         {
             if (Item.level == 0) return;
 
@@ -104,7 +106,7 @@ namespace GameDuo.Components
             itemLevelText.text = Item.level.ToString();
         }
 
-        private void HideItem()
+        public void HideItem()
         {
             itemImage.gameObject.SetActive(false);
             itemLevelText.gameObject.SetActive(false);
