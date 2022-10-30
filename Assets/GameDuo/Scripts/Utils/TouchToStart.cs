@@ -19,6 +19,9 @@ public class TouchToStart : MonoBehaviour
     public void OnClick()
     {
         gameObject.SetActive(false);
+
+        GameManager.Data.LoadEnemyData();
+
         var userData = GameManager.Data.TryLoadUserData();
 
         if (userData.IsFirstUser())

@@ -42,6 +42,7 @@ namespace GameDuo.UI.Scene
             HeartEnforceField,
 
             ItemContainer,
+            EnemySelectContainer,
             DraggingUI,
         }
 
@@ -55,7 +56,7 @@ namespace GameDuo.UI.Scene
 
         EnforceField attackEnforce, defenseEnforce, heartEnforce;
 
-        Transform itemContainer;
+        Transform itemContainer, enemySelectContainer;
 
         public RectTransform DraggingUI { get; private set; }
 
@@ -114,6 +115,7 @@ namespace GameDuo.UI.Scene
             heartEnforce = GetObject((int)GameObjects.HeartEnforceField).GetComponent<EnforceField>();
 
             itemContainer = GetObject((int)GameObjects.ItemContainer).transform;
+            enemySelectContainer = GetObject((int)GameObjects.EnemySelectContainer).transform;
             DraggingUI = GetObject((int)GameObjects.DraggingUI).GetComponent<RectTransform>();
 
             for (int i=0; i<itemContainer.childCount; i++)
@@ -121,6 +123,23 @@ namespace GameDuo.UI.Scene
                 var itemComponent = itemContainer.GetChild(i).GetComponent<ItemComponent>();
                 itemComponent.InitItemComponent(i, GameManager.Data.UserData.Items[i]);
             }
+
+            for(int i = 0; i<enemySelectContainer.childCount; i++)
+            {
+                var lambda = i;
+                var enemySelectField = enemySelectContainer.GetChild(lambda).GetComponent<EnemySelectField>();
+                enemySelectField.InitEnemySelectField(GameManager.Data.EnemyData.enemies[lambda]);
+                AddUIEvent(enemySelectField.enemySelectButton, (_) =>
+                {
+                    OnClickEnemySelectButton(lambda);
+                }, Define.UIEvent.Click);
+                AddButtonAnim(enemySelectField.enemySelectButton);
+            }
+        }
+
+        private void OnClickEnemySelectButton(int index)
+        {
+            Debug.Log("Spawn " + index);
         }
 
         private void OnClickCreateButton(PointerEventData obj)

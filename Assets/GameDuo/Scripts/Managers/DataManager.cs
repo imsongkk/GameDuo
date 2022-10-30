@@ -11,6 +11,7 @@ namespace GameDuo.Managers
         public readonly string UserDataJsonName = "\\UserData.json";
 
         public UserData UserData { get; private set; } = null;
+        public EnemyData EnemyData { get; private set; } = null;
 
         public UserData TryLoadUserData()
         {
@@ -41,6 +42,11 @@ namespace GameDuo.Managers
         {
             var userDataEntity = UserDataEntity.From(UserData);
             File.WriteAllText(Application.persistentDataPath + UserDataJsonName, JsonUtility.ToJson(userDataEntity));
+        }
+
+        public void LoadEnemyData()
+        {
+            EnemyData = new EnemyData();
         }
     }
 }
