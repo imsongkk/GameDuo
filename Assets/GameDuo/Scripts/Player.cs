@@ -44,6 +44,8 @@ public class Player : MonoBehaviour
             target.OnDamge(damage);
             if (target.IsDied())
             {
+                var xp = target.EnemyInfo.xp;
+                GameManager.User.EnemyKill(xp);
                 Destroy(target.gameObject);
                 yield break;
             }

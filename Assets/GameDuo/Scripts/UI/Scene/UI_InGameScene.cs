@@ -229,5 +229,13 @@ namespace GameDuo.UI.Scene
         {
             moneyText.text = GameManager.Data.UserData.Money.ToString();
         }
+
+        public void RefreshXp(int xp, int maxXp, int level)
+        {
+            levelText.text = $"Level : {level}";
+            Debug.Log(xp);
+            Debug.Log(maxXp);
+            xpBar.fillAmount = xp / (float)maxXp;
+        }
     }
 }

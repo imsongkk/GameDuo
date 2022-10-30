@@ -1,3 +1,4 @@
+using GameDuo.Managers;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -161,6 +162,14 @@ namespace GameDuo.Data
             attackData.upgradeCost = result.Item2;
             return attackData;
         }
+
+        public void LevelUp()
+        {
+            level += 1;
+            UpgradeDataList[(int)EnforceType.Attack].TryGetValue(level, out var result);
+            value = result.Item1;
+            upgradeCost = result.Item2;
+        }
     }
 
     [Serializable]
@@ -220,6 +229,27 @@ namespace GameDuo.Data
             XpDataDict.TryGetValue(xpData.level, out int maxValue);
             xpData.maxValue = maxValue;
             return xpData;
+        }
+
+        public bool TryLevelUp()
+        {
+            if(value >= maxValue)
+            {
+                if (level == 5) 
+                    return false;
+                value -= maxValue;
+                level += 1;
+                XpDataDict.TryGetValue(level, out maxValue);
+                GameManager.Data.UserData.Attack.LevelUp();
+                return true;
+            }
+            return false;
+        }
+
+        public int GetMaxXp(int level)
+        {
+            XpDataDict.TryGetValue(level, out var result);
+            return result;
         }
     }
 

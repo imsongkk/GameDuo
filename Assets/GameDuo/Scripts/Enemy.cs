@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class Enemy : MonoBehaviour
 {
-    EnemyInfo enemyInfo;
+    public EnemyInfo EnemyInfo { get; set; }
     Player player;
 
     [SerializeField] Image hpBarBackground;
@@ -42,7 +42,7 @@ public class Enemy : MonoBehaviour
         var cached = new WaitForSeconds(1f);
         while(true)
         {
-            player.OnDamage(enemyInfo.attack);
+            player.OnDamage(EnemyInfo.attack);
             if (player.IsDied())
                 yield break;
             yield return cached;
@@ -53,7 +53,7 @@ public class Enemy : MonoBehaviour
 
     public void OnDamge(int attack)
     {
-        currentHeart -= (attack - enemyInfo.defense);
+        currentHeart -= (attack - EnemyInfo.defense);
         RefreshHpBar();
         if (IsDied())
         {
@@ -70,9 +70,9 @@ public class Enemy : MonoBehaviour
 
     public void InitEnemy(int index, Player player)
     {
-        enemyInfo = GameManager.Data.EnemyData.enemies[index];
+        EnemyInfo = GameManager.Data.EnemyData.enemies[index];
         this.player = player;
-        currentHeart = enemyInfo.heart;
+        currentHeart = EnemyInfo.heart;
         maxHeart = currentHeart;
     }
 

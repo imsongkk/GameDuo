@@ -12,9 +12,14 @@ namespace GameDuo.Managers
         public UI_InGameScene UI_InGameScene { get; set; }
         public Player Player { get; set; }
 
-        public void EnemyKill()
+        public void EnemyKill(int xp)
         {
+            GameManager.Data.UserData.Xp.value += xp;
+            var result = GameManager.Data.UserData.Xp.TryLevelUp();
 
+            UI_InGameScene.RefreshXp(GameManager.Data.UserData.Xp.value, 
+                GameManager.Data.UserData.Xp.GetMaxXp(GameManager.Data.UserData.Xp.level),
+                GameManager.Data.UserData.Xp.level);
         }
 
         public bool TryUpgrade(EnforceType type)
