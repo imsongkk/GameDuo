@@ -34,7 +34,10 @@ namespace GameDuo.Managers
             {
                 GameManager.Data.UserData.Money -= upgradeData.upgradeCost;
                 UI_InGameScene.RefreshMoneyText();
+
                 upgradeData.Upgrade(type);
+                Player.RefreshHP();
+
                 return true;
             }
             return false;

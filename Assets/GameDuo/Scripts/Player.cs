@@ -11,17 +11,11 @@ public class Player : MonoBehaviour
     
     public Queue<Enemy> EnemyQueue { get; set; } = new Queue<Enemy>();
 
-    int attack, defense, heart;
-    int maxHeart;
-
     public bool isAttacking = false;
 
     public void Start()
     {
-        attack = GameManager.Data.UserData.Attack.value;
-        defense = GameManager.Data.UserData.Defense.value;
-        heart = GameManager.Data.UserData.Heart.value;
-        maxHeart = GameManager.Data.UserData.Heart.GetMaxHp(GameManager.Data.UserData.Heart.level);
+        GameManager.User.Player = this;
         RefreshHP();
 
         hpBarBackground.transform.position = Camera.main.WorldToScreenPoint(transform.position + new Vector3(0, 0.15f, 0));
@@ -45,8 +39,8 @@ public class Player : MonoBehaviour
         var cached = new WaitForSeconds(1f);
         while(true)
         {
-            target.OnDamge(attack);
-            Debug.Log(attack);
+            var damage = GetRealAttackDamage();
+            target.OnDamge(damage);
             if (target.IsDied())
             {
                 Destroy(target.gameObject);
@@ -58,21 +52,30 @@ public class Player : MonoBehaviour
 
     public void OnDamage(int damage)
     {
-        heart -= (damage - defense);
+        GameManager.Data.UserData.Heart.value -= (damage - GameManager.Data.UserData.Defense.value);
         RefreshHP();
-        if (heart <= 0)
+        if (GameManager.Data.UserData.Heart.value <= 0)
             Die();
     }
 
-    public bool IsDied() => heart <= 0;
+    private int GetRealAttackDamage()
+    {
+        var inventory = GameManager.Data.UserData.Item;
+        if (inventory.IsExistsItem())
+            return inventory.damage + GameManager.Data.UserData.Attack.value;
+        else
+            return GameManager.Data.UserData.Attack.value;
+    }
+
+    public bool IsDied() => GameManager.Data.UserData.Heart.value <= 0;
 
     private void Die()
     {
-        Debug.Log("DIe");
+        
     }
 
-    private void RefreshHP()
+    public void RefreshHP()
     {
-        hpBar.fillAmount = heart / (float)maxHeart;
+        hpBar.fillAmount = GameManager.Data.UserData.Heart.value / (float)GameManager.Data.UserData.Heart.GetMaxHp(GameManager.Data.UserData.Heart.level);
     }
 }
