@@ -76,7 +76,7 @@ namespace GameDuo.Components
                 droppedComponent.TryShowItem();
         }
 
-        private bool IsDragable()
+        public bool IsDragable()
             => Item.level != 0;
 
         public bool CanCreateItem()

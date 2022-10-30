@@ -18,18 +18,17 @@ namespace GameDuo.Components
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            Debug.Log("ENTER");
             GameManager.Item.Inventory = this;
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            Debug.Log("Exit");
             GameManager.Item.Inventory = null;
         }
 
         public void OnDrop(ItemComponent droppedItem)
         {
+            if (!droppedItem.IsDragable()) return;
             if (IsExistsItem())
             {
                 ItemData temp = new ItemData();
