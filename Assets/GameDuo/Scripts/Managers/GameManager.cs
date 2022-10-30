@@ -12,6 +12,8 @@ namespace GameDuo.Managers
         static GameManager instance;
         public static GameManager Instance { get { Init(); return instance; } }
 
+        public static Action OnUpdate;
+
         ResourceManager resourceManager = new ResourceManager();
         UIManager uiManager = new UIManager();
         DataManager dataManager = new DataManager();
@@ -40,6 +42,11 @@ namespace GameDuo.Managers
 
                 DontDestroyOnLoad(instance.gameObject);
             }
+        }
+
+        public void Update()
+        {
+            OnUpdate?.Invoke();
         }
 
         public static void DeleteGameData()

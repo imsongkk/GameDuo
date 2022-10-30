@@ -24,10 +24,41 @@ namespace GameDuo.Managers
 
         bool isProducing = false;
 
+        bool isIncreasing = false;
+
         public void InitItemManager(UI_InGameScene target, Transform itemContainer)
         {
+            GameManager.OnUpdate += Update;
             UI_InGameScene = target;
             this.itemContainer = itemContainer;
+        }
+
+        private void Update()
+        {
+            if (GameManager.Data.UserData.CanCreateItemCount < 10 && !isIncreasing)
+                GameManager.Instance.StartCoroutine(IncreaseItemCount(UI_InGameScene.producingBar, UI_InGameScene.RefreshProduce));
+        }
+
+        IEnumerator IncreaseItemCount(Image producingBar, Action UIRefreshAction)
+        {
+            if (GameManager.Data.UserData.CanCreateItemCount >= 10) yield break;
+
+            isIncreasing = true;
+            while (true)
+            {
+                if (producingBar.fillAmount >= 1f)
+                {
+                    producingBar.fillAmount = 0f;
+                    isIncreasing = false;
+                    GameManager.Data.UserData.CanCreateItemCount += 1;
+                    UIRefreshAction?.Invoke();
+                    if (GameManager.Data.UserData.CanCreateItemCount < 10)
+                        GameManager.Instance.StartCoroutine(IncreaseItemCount(producingBar, UIRefreshAction));
+                    yield break;
+                }
+                producingBar.fillAmount += 0.005f;
+                yield return null;
+            }
         }
 
         public void OnBeginDrag(ItemComponent draggingItem)
@@ -71,8 +102,6 @@ namespace GameDuo.Managers
                 {
                     itemComponent.CreateItem();
                     UIRefreshAction?.Invoke();
-                    if (!isProducing)
-                        GameManager.Instance.StartCoroutine(ProduceItem(producingBar, UIRefreshAction));
                     return true;
                 }
             }

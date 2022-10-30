@@ -47,7 +47,8 @@ namespace GameDuo.UI.Scene
         }
 
         TextMeshProUGUI nameText, moneyText, levelText, createText;
-        Image xpBar, producingBar;
+        Image xpBar;
+        public Image producingBar;
         GameObject selectButton, enforceButton, produceButton, saveButton;
         GameObject selectWindow, enforceWindow, produceWindow, shopWindow;
 
@@ -174,7 +175,7 @@ namespace GameDuo.UI.Scene
             var userData = GameManager.Data.UserData;
             nameText.text = userData.Name;
             moneyText.text = userData.Money.ToString();
-            createText.text = userData.CanCreateItemCount.ToString();
+            createText.text = $"{userData.CanCreateItemCount} / 10";
             levelText.text = $"Level : {userData.Xp.level}";
             int curXp = userData.Xp.value;
             int maxXp = userData.Xp.maxValue;
@@ -235,6 +236,11 @@ namespace GameDuo.UI.Scene
             Debug.Log(xp);
             Debug.Log(maxXp);
             xpBar.fillAmount = xp / (float)maxXp;
+        }
+
+        public void RefreshProduce()
+        {
+            createText.text = $"{GameManager.Data.UserData.CanCreateItemCount} / {maxCreateItemCount}";
         }
     }
 }

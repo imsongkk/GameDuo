@@ -86,6 +86,7 @@ namespace GameDuo.Components
         public void CreateItem()
         {
             Item = ItemData.CreateFirstItem();
+            GameManager.Data.UserData.Items[index] = Item;
             GameManager.Data.UserData.CanCreateItemCount -= 1;
             TryShowItem();
         }
