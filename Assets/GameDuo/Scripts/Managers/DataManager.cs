@@ -48,5 +48,10 @@ namespace GameDuo.Managers
         {
             EnemyData = new EnemyData();
         }
+
+        public void Save()
+        {
+            SaveUserData();
+        }
     }
 }

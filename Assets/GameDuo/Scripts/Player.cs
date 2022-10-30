@@ -19,7 +19,7 @@ public class Player : MonoBehaviour
         GameManager.User.Player = this;
         RefreshHP();
 
-        hpBarBackground.transform.position = Camera.main.WorldToScreenPoint(transform.position + new Vector3(0, 0.15f, 0));
+        hpBarBackground.transform.position = Camera.main.WorldToScreenPoint(transform.position + new Vector3(0, 0.2f, 0));
     }
 
     public void Update()

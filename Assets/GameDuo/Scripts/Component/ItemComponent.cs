@@ -66,10 +66,11 @@ namespace GameDuo.Components
 
             ItemData.TryMerge(droppedComponent.Item, Item, out var mergedItem);
 
-            if(mergedItem != null)
+            if (mergedItem != null)
             {
                 droppedComponent.DeleteItem();
                 this.Item = mergedItem;
+                GameManager.Data.UserData.Items[index] = Item;
                 TryShowItem();
             }
             else
@@ -93,7 +94,7 @@ namespace GameDuo.Components
         {
             HideItem();
             Item = ItemData.CreateDefaultItemData();
-            Debug.Log(Item.level);
+            GameManager.Data.UserData.Items[index] = Item;
         }
 
         public void TryShowItem()

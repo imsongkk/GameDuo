@@ -21,13 +21,13 @@ namespace GameDuo.UI.Scene
             SelectButton,
             EnforceButton,
             ProduceButton,
-            ShopButton,
+            
+            SaveButton,
             CreateButton,
 
             SelectWindow,
             EnforceWindow,
             ProduceWindow,
-            ShopWindow,
 
             NameText,
             LevelText,
@@ -48,7 +48,7 @@ namespace GameDuo.UI.Scene
 
         TextMeshProUGUI nameText, moneyText, levelText, createText;
         Image xpBar, producingBar;
-        GameObject selectButton, enforceButton, produceButton, shopButton;
+        GameObject selectButton, enforceButton, produceButton, saveButton;
         GameObject selectWindow, enforceWindow, produceWindow, shopWindow;
 
         GameObject currentSelectedButton;
@@ -97,9 +97,9 @@ namespace GameDuo.UI.Scene
             AddUIEvent(produceButton, OnClickProduceButton, Define.UIEvent.Click);
             AddButtonAnim(produceButton);
 
-            shopButton = GetObject((int)GameObjects.ShopButton);
-            AddUIEvent(shopButton, OnClickShopButton, Define.UIEvent.Click);
-            AddButtonAnim(shopButton);
+            saveButton = GetObject((int)GameObjects.SaveButton);
+            AddUIEvent(saveButton, OnClickSaveButton, Define.UIEvent.Click);
+            AddButtonAnim(saveButton);
 
             GameObject createButton = GetObject((int)GameObjects.CreateButton);
             AddUIEvent(createButton, OnClickCreateButton, Define.UIEvent.Click);
@@ -108,7 +108,6 @@ namespace GameDuo.UI.Scene
             selectWindow = GetObject((int)GameObjects.SelectWindow);
             enforceWindow = GetObject((int)GameObjects.EnforceWindow);
             produceWindow = GetObject((int)GameObjects.ProduceWindow);
-            shopWindow = GetObject((int)GameObjects.ShopWindow);
 
             attackEnforce = GetObject((int)GameObjects.AttackEnforceField).GetComponent<EnforceField>();
             defenseEnforce = GetObject((int)GameObjects.DefenseEnforceField).GetComponent<EnforceField>();
@@ -150,9 +149,9 @@ namespace GameDuo.UI.Scene
             });
         }
 
-        private void OnClickShopButton(PointerEventData obj)
+        private void OnClickSaveButton(PointerEventData obj)
         {
-            UpdateCurrentSelectedButton(shopButton, shopWindow);
+            GameManager.Data.Save();
         }
 
         private void OnClickProduceButton(PointerEventData obj)
