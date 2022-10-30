@@ -1,4 +1,5 @@
 using GameDuo.Managers;
+using GameDuo.UI.Popup;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -71,7 +72,7 @@ public class Player : MonoBehaviour
 
     private void Die()
     {
-        
+        GameManager.UI.ShowPopupUI<UI_GameOverPopup>();
     }
 
     public void RefreshHP()
