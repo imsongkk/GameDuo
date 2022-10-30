@@ -139,7 +139,7 @@ namespace GameDuo.UI.Scene
 
         private void OnClickEnemySelectButton(int index)
         {
-            Debug.Log("Spawn " + index);
+            GameManager.Enemy.SpawnEnemy(index);
         }
 
         private void OnClickCreateButton(PointerEventData obj)

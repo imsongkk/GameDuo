@@ -17,12 +17,14 @@ namespace GameDuo.Managers
         DataManager dataManager = new DataManager();
         UserManager userManager = new UserManager();
         ItemManager itemManager = new ItemManager();
+        EnemyManager enemyManager = new EnemyManager();
 
         public static ResourceManager Resource { get => Instance.resourceManager; }
         public static UIManager UI { get => Instance.uiManager; }
         public static DataManager Data { get => Instance.dataManager; }
         public static UserManager User { get => Instance.userManager; }
         public static ItemManager Item { get => Instance.itemManager; }
+        public static EnemyManager Enemy { get => Instance.enemyManager;}
 
         public static void Init()
         {

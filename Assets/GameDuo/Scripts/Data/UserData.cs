@@ -189,6 +189,12 @@ namespace GameDuo.Data
             heartData.upgradeCost = result.Item2;
             return heartData;
         }
+
+        public int GetMaxHp(int level)
+        {
+            UpgradeDataList[(int)EnforceType.Heart].TryGetValue(level, out var result);
+            return result.Item1;
+        }
     }
 
     [Serializable]
